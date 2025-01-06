@@ -1,83 +1,59 @@
+# Mandy's Daily Commit
 
-# Automated Daily Commits with GitHub Actions
+This repository is configured to use a GitHub Actions workflow for automated daily commits. The workflow ensures a file named `commit_number.md` is updated every day. If the file does not exist, it creates the file with an initial commit number. If it already exists, the commit number is incremented by 1.
 
-This project demonstrates how to use GitHub Actions to perform automated daily commits to a repository. The workflow is designed to update a file named `commit_number.md` every day at midnight UTC, incrementing a commit counter and pushing the changes back to the repository.
+## Workflow Overview
 
-## Features
-- **Automated Workflow**: Runs daily at midnight (UTC) using GitHub Actions.
-- **Incremental Updates**: Maintains a file (`commit_number.md`) with an incrementing commit counter.
-- **Fully Configurable**: Easy to customize the workflow and schedule.
+### Process
 
----
+1. **Checkout Repository**:
 
-## How It Works
-1. **Daily Trigger**:
-   - The workflow runs every day at midnight UTC, scheduled using a cron job.
+   - Clones the repository to the runner.
 
-2. **File Management**:
-   - If the file `commit_number.md` does not exist, it creates the file with:
-     ```
-     Hello, this is an automated file.
-     Commit number: 1
-     This is part of an **automated daily commit** performed by a **GitHub Actions workflow**.
-     ```
-   - If the file already exists, it reads the current commit number, increments it, and updates the file.
+2. **File Operations**:
 
-3. **Git Configuration and Push**:
-   - Configures Git with a name and email.
-   - Pushes the updated file back to the repository.
+   - Checks if `commit_number.md` exists.
+   - If it does not exist:
+     - Creates the file.
+     - Writes the initial content with commit number 1.
+   - If it exists:
+     - Reads the current commit number.
+     - Increments the commit number by 1.
+     - Updates the file.
 
----
+3. **Git Configuration**:
 
-## File Structure
-```
-.
-├── .github/
-│   └── workflows/
-│       └── commit.yml      # Defines the GitHub Actions workflow
-├── commit_number.md        # File updated and committed daily
-└── README.md               # Project documentation
-```
+   - Sets user name and email for committing changes.
 
----
+4. **Commit and Push**:
+   - Adds the file to Git, commits the changes, and pushes them back to the repository.
 
-## Example Output
-Here’s an example of how `commit_number.md` might look after a few commits:
+## File Details
+
+### `commit_number.md`
+
+- This file contains:
+  - A greeting message.
+  - The current commit number.
+
+#### Example Content:
+
+If the file is created:
 
 ```
-Hello, this is an automated file.
-Commit number: 3
-This is part of an **automated daily commit** performed by a **GitHub Actions workflow**.
+Hello, my name is Mandip Kumar Kanu
+commit number: 1
 ```
 
----
+If the file already exists, and the last commit number is 5, it updates to:
 
-## Configuration
-1. **Workflow File**:
-   The workflow is defined in `.github/workflows/commit.yml`. You can customize the schedule or file content there.
+```
+Hello, my name is Mandip Kumar Kanu
+commit number: 6
+```
 
-2. **Schedule**:
-   The workflow runs daily at midnight UTC using this cron expression:
-   ```yaml
-   schedule:
-     - cron: '0 0 * * *'
-   ```
+## GitHub Actions Workflow
 
-3. **GitHub Token**:
-   The workflow uses the `secrets.GITHUB_TOKEN` to securely authenticate and push changes to the repository.
+### Workflow File Location
 
----
-
-## Usage
-1. Clone or fork this repository.
-2. Ensure the `.github/workflows/commit.yml` file is added to your repository.
-3. Push the changes to GitHub.
-4. The workflow will start running automatically.
-
----
-
-## Notes
-- Ensure that GitHub Actions is enabled for your repository.
-- To customize the commit file content or schedule, modify the `commit.yml` file.
-
----
+- Path: `.github/workflows/commit.yml`

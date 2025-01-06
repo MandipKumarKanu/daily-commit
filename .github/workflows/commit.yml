@@ -2,7 +2,7 @@ name: Mandy's Daily Commit
 
 on:
   schedule:
-    - cron: '15 18 * * *'  # Runs daily at 00:00 NPT (midnight) UTC +5:45
+    - cron: "0 0 * * *" 
 
 jobs:
   commit:
@@ -14,24 +14,25 @@ jobs:
         with:
           ref: main
 
-      - name: Create file and commit
+      - name: Update or create file
         run: |
+          set -e
+          git config --global user.name "MandipKumarKanu"
+          git config --global user.email "mandipshah3@gmail.com"
           FILE="commit_number.md"
+
+          # Check if the file exists
           if [ ! -f "$FILE" ]; then
             echo "Hello, my name is Mandip Kumar Kanu" > "$FILE"
             echo "commit number: 1" >> "$FILE"
           else
-            CURRENT_COUNT=$(grep -oP 'commit number: \K\d+' "$FILE")
-            if [ -z "$CURRENT_COUNT" ]; then
-              CURRENT_COUNT=0
-            fi
+            # Read the current commit number and increment it
+            CURRENT_COUNT=$(grep -oP 'commit number: \K\d+' "$FILE" || echo 0)
             NEXT_COUNT=$((CURRENT_COUNT + 1))
             sed -i "/commit number: /c\commit number: $NEXT_COUNT" "$FILE"
           fi
-          git config --global user.name "MandipKumarKanu"
-          git config --global user.email "mandipshah3@gmail.com"
+
+          # Add the file and commit the changes
           git add "$FILE"
-          git commit -m "Hello, my name is Mandip nice to meet you"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/MandipKumarKanu/daily-commit.git
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git commit -m "Updated commit number to $NEXT_COUNT"
+          git push
